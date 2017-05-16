@@ -38,10 +38,9 @@ type Register struct {
 // Config is a struct containing all config for register
 type Config struct {
 
-	// OverrideAllowed allows register to register the same
-	// name of interface more than once if true
-	// otherwise register will panic when user try to override
-	// the interface which has been registered
+	// OverrideAllowed allows the register to override
+	// an already registered interface by name if it is true,
+	// otherwise register will panic.
 	OverrideAllowed bool
 }
 
