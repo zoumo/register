@@ -57,8 +57,9 @@ func NewRegister(config *Config) *Register {
 	}
 }
 
-// Register binds name and interface
-// It will panic if name already exists and register do not allow user to override the interface
+// Register registers a interface by name.
+// It will panic if name corresponds to an already registered interface
+// and the register does not allow user to override the interface.
 func (r *Register) Register(name string, v interface{}) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
@@ -82,7 +83,7 @@ func (r *Register) Get(name string) (interface{}, bool) {
 	return v, ok
 }
 
-// Contains returns true if the given name has been registered
+// Contains returns true if name corresponds to an already registered interface
 func (r *Register) Contains(name string) bool {
 	r.mu.Lock()
 	defer r.mu.Unlock()
@@ -90,7 +91,7 @@ func (r *Register) Contains(name string) bool {
 	return ok
 }
 
-// Iter returns all interfaces in the register
+// Iter returns an iterable map for <name, interface> pair
 func (r *Register) Iter() map[string]interface{} {
 	r.mu.Lock()
 	defer r.mu.Unlock()
