@@ -86,16 +86,16 @@ func (r *Register) Unlock() {
 
 // Get returns an interface registered with the given name
 func (r *Register) Get(name string) (interface{}, bool) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 	v, ok := r.data[name]
 	return v, ok
 }
 
 // Contains returns true if name corresponds to an already registered interface
 func (r *Register) Contains(name string) bool {
-	r.mu.Lock()
-	defer r.mu.Unlock()
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 	_, ok := r.data[name]
 	return ok
 }
@@ -108,8 +108,8 @@ func (r *Register) Iter() map[string]interface{} {
 // Keys returns the name of all registered interfaces
 func (r *Register) Keys() []string {
 	names := []string{}
-	r.mu.Lock()
-	defer r.mu.Unlock()
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 	for name := range r.data {
 		names = append(names, name)
 	}
@@ -119,10 +119,17 @@ func (r *Register) Keys() []string {
 // Values returns all registered interfaces
 func (r *Register) Values() []interface{} {
 	ret := []interface{}{}
-	r.mu.Lock()
-	defer r.mu.Unlock()
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 	for _, v := range r.data {
 		ret = append(ret, v)
 	}
 	return ret
+}
+
+// Clear cleans up the registered items
+func (r *Register) Clear() {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.data = make(map[string]interface{})
 }
