@@ -74,6 +74,16 @@ func (r *Register) Register(name string, v interface{}) {
 
 }
 
+// Lock locks the register. Generally be used before you iterating the register
+func (r *Register) Lock() {
+	r.mu.Lock()
+}
+
+// Unlock unlocks the register. Generally be used after you iterating the register
+func (r *Register) Unlock() {
+	r.mu.Unlock()
+}
+
 // Get returns an interface registered with the given name
 func (r *Register) Get(name string) (interface{}, bool) {
 	r.mu.Lock()
@@ -92,8 +102,6 @@ func (r *Register) Contains(name string) bool {
 
 // Iter returns an iterable map for <name, interface> pair
 func (r *Register) Iter() map[string]interface{} {
-	r.mu.Lock()
-	defer r.mu.Unlock()
 	return r.data
 }
 
